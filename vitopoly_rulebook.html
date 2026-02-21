@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vitopoly Rush 2.0 — Official Rulebook</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --neon-yellow: #FFE600;
+    --neon-cyan: #00F5FF;
+    --neon-pink: #FF2D78;
+    --neon-green: #39FF14;
+    --neon-orange: #FF6B00;
+    --neon-purple: #BF00FF;
+    --dark-bg: #05050F;
+    --card-bg: #0A0A1A;
+    --card-border: #1A1A3A;
+    --text-primary: #E8E8FF;
+    --text-dim: #7878A8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--dark-bg); color: var(--text-primary); font-family: 'Rajdhani', sans-serif; font-size: 16px; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; top:0;left:0;right:0;bottom:0; background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px); pointer-events: none; z-index: 9999; }
+  .stars { position: fixed; top:0;left:0;width:100%;height:100%; pointer-events:none; z-index:0; overflow:hidden; }
+  .star { position:absolute; background:white; border-radius:50%; animation:twinkle linear infinite; }
+  @keyframes twinkle { 0%,100%{opacity:0.2}50%{opacity:1} }
+
+  /* COVER */
+  .cover { position:relative; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:40px 20px; z-index:1; overflow:hidden; }
+  .cover::before { content:''; position:absolute; top:0;left:0;right:0;bottom:0; background: radial-gradient(ellipse at 20% 50%,rgba(255,230,0,0.08) 0%,transparent 60%), radial-gradient(ellipse at 80% 50%,rgba(0,245,255,0.08) 0%,transparent 60%), radial-gradient(ellipse at 50% 80%,rgba(255,45,120,0.06) 0%,transparent 60%); pointer-events:none; }
+  .cover-badge { font-family:'Press Start 2P',monospace; font-size:10px; color:var(--neon-cyan); letter-spacing:4px; text-transform:uppercase; margin-bottom:24px; animation:flicker 3s infinite; text-shadow:0 0 15px var(--neon-cyan); }
+  @keyframes flicker { 0%,95%,100%{opacity:1}96%{opacity:0.4}97%{opacity:1}98%{opacity:0.3}99%{opacity:1} }
+  .cover-title { font-family:'Orbitron',monospace; font-weight:900; font-size:clamp(48px,9vw,100px); line-height:1; background:linear-gradient(135deg,var(--neon-yellow) 0%,var(--neon-orange) 40%,var(--neon-pink) 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; filter:drop-shadow(0 0 30px rgba(255,107,0,0.5)); animation:titlePulse 4s ease-in-out infinite; margin-bottom:8px; }
+  @keyframes titlePulse { 0%,100%{filter:drop-shadow(0 0 30px rgba(255,107,0,0.5))}50%{filter:drop-shadow(0 0 60px rgba(255,107,0,0.9)) drop-shadow(0 0 120px rgba(255,45,120,0.4))} }
+  .cover-subtitle { font-family:'Press Start 2P',monospace; font-size:clamp(14px,2.5vw,26px); color:var(--neon-cyan); letter-spacing:6px; margin-bottom:12px; text-shadow:0 0 20px var(--neon-cyan); }
+  .cover-tagline { font-family:'Rajdhani',sans-serif; font-size:18px; color:var(--text-dim); letter-spacing:3px; margin-bottom:50px; text-transform:uppercase; }
+  .cover-stats { display:flex; gap:24px; flex-wrap:wrap; justify-content:center; margin-bottom:50px; }
+  .cover-stat { background:rgba(255,230,0,0.05); border:1px solid rgba(255,230,0,0.3); padding:16px 24px; text-align:center; clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%); }
+  .cover-stat .val { font-family:'Orbitron',monospace; font-size:26px; font-weight:900; color:var(--neon-yellow); display:block; text-shadow:0 0 15px var(--neon-yellow); }
+  .cover-stat .lbl { font-size:11px; letter-spacing:2px; color:var(--text-dim); text-transform:uppercase; margin-top:4px; }
+  .scroll-hint { font-family:'Press Start 2P',monospace; font-size:9px; color:var(--neon-green); letter-spacing:2px; animation:bounce 1.5s ease-in-out infinite; text-shadow:0 0 10px var(--neon-green); }
+  @keyframes bounce { 0%,100%{transform:translateY(0)}50%{transform:translateY(8px)} }
+
+  /* NAV */
+  .sticky-nav { position:sticky; top:0; z-index:100; background:rgba(5,5,15,0.97); backdrop-filter:blur(10px); border-bottom:1px solid rgba(0,245,255,0.2); display:flex; overflow-x:auto; scrollbar-width:none; }
+  .sticky-nav::-webkit-scrollbar{display:none}
+  .nav-item { font-family:'Press Start 2P',monospace; font-size:7px; letter-spacing:1px; color:var(--text-dim); padding:14px 16px; white-space:nowrap; cursor:pointer; transition:all 0.2s; border-bottom:2px solid transparent; text-decoration:none; display:block; }
+  .nav-item:hover,.nav-item.active { color:var(--neon-cyan); border-bottom-color:var(--neon-cyan); text-shadow:0 0 10px var(--neon-cyan); background:rgba(0,245,255,0.05); }
+
+  /* SECTIONS */
+  .section { position:relative; z-index:1; max-width:1100px; margin:0 auto; padding:70px 24px; }
+  .section-divider { height:2px; background:linear-gradient(90deg,transparent,var(--neon-cyan),var(--neon-pink),transparent); position:relative; z-index:1; }
+  .section-header { display:flex; align-items:center; gap:20px; margin-bottom:44px; }
+  .section-num { font-family:'Press Start 2P',monospace; font-size:10px; color:var(--neon-pink); background:rgba(255,45,120,0.1); border:1px solid rgba(255,45,120,0.4); padding:6px 12px; white-space:nowrap; }
+  .section-title { font-family:'Orbitron',monospace; font-size:clamp(22px,4vw,38px); font-weight:900; color:var(--text-primary); text-transform:uppercase; letter-spacing:2px; }
+  .section-title span { background:linear-gradient(90deg,var(--neon-yellow),var(--neon-orange)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+
+  /* CARDS */
+  .card { background:var(--card-bg); border:1px solid var(--card-border); padding:28px; margin-bottom:20px; position:relative; transition:all 0.3s; }
+  .card:hover { border-color:rgba(0,245,255,0.25); }
+  .card::before { content:''; position:absolute; top:0;left:0; width:3px;height:100%; }
+  .card.yellow::before{background:var(--neon-yellow)} .card.cyan::before{background:var(--neon-cyan)} .card.pink::before{background:var(--neon-pink)} .card.green::before{background:var(--neon-green)} .card.orange::before{background:var(--neon-orange)} .card.purple::before{background:var(--neon-purple)}
+  .card-title { font-family:'Orbitron',monospace; font-size:13px; font-weight:700; color:var(--neon-cyan); margin-bottom:14px; letter-spacing:2px; text-transform:uppercase; }
+  .card-title.yellow{color:var(--neon-yellow)} .card-title.pink{color:var(--neon-pink)} .card-title.green{color:var(--neon-green)} .card-title.orange{color:var(--neon-orange)} .card-title.purple{color:var(--neon-purple)}
+  .body-text { font-family:'Rajdhani',sans-serif; font-size:17px; font-weight:600; color:var(--text-primary); line-height:1.7; }
+
+  /* GRIDS */
+  .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+  .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+
+  /* STAT BOXES */
+  .stat-box { background:var(--card-bg); border:1px solid var(--card-border); padding:24px; text-align:center; position:relative; overflow:hidden; transition:all 0.3s; }
+  .stat-box:hover{transform:translateY(-4px);box-shadow:0 8px 30px rgba(0,0,0,0.5)}
+  .stat-box::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px}
+  .stat-box.yellow::after{background:var(--neon-yellow);box-shadow:0 0 10px var(--neon-yellow)} .stat-box.cyan::after{background:var(--neon-cyan);box-shadow:0 0 10px var(--neon-cyan)} .stat-box.pink::after{background:var(--neon-pink);box-shadow:0 0 10px var(--neon-pink)} .stat-box.green::after{background:var(--neon-green);box-shadow:0 0 10px var(--neon-green)} .stat-box.orange::after{background:var(--neon-orange);box-shadow:0 0 10px var(--neon-orange)} .stat-box.purple::after{background:var(--neon-purple)}
+  .stat-box .num{font-family:'Orbitron',monospace;font-size:34px;font-weight:900;display:block;margin-bottom:8px}
+  .stat-box.yellow .num{color:var(--neon-yellow);text-shadow:0 0 20px rgba(255,230,0,0.6)} .stat-box.cyan .num{color:var(--neon-cyan);text-shadow:0 0 20px rgba(0,245,255,0.6)} .stat-box.pink .num{color:var(--neon-pink);text-shadow:0 0 20px rgba(255,45,120,0.6)} .stat-box.green .num{color:var(--neon-green);text-shadow:0 0 20px rgba(57,255,20,0.6)} .stat-box.orange .num{color:var(--neon-orange);text-shadow:0 0 20px rgba(255,107,0,0.6)} .stat-box.purple .num{color:var(--neon-purple)}
+  .stat-box .lbl{font-size:12px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase}
+
+  /* TABLES */
+  .tbl-wrap{overflow-x:auto;margin:20px 0}
+  table{width:100%;border-collapse:collapse;font-family:'Rajdhani',sans-serif;font-size:15px}
+  table thead tr{background:linear-gradient(90deg,rgba(0,245,255,0.15),rgba(255,45,120,0.1));border-bottom:2px solid var(--neon-cyan)}
+  table th{font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:2px;color:var(--neon-cyan);padding:12px 14px;text-align:left;text-transform:uppercase;white-space:nowrap}
+  table td{padding:11px 14px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text-primary);font-weight:600;vertical-align:middle}
+  table tbody tr:nth-child(even){background:rgba(255,255,255,0.02)} table tbody tr:hover{background:rgba(0,245,255,0.04)}
+  .vp{color:var(--neon-green);font-weight:700} .vn{color:var(--neon-pink);font-weight:700} .vw{color:var(--neon-yellow);font-weight:700} .vd{color:var(--text-dim)}
+
+  /* TIMELINE */
+  .timeline{display:flex;gap:0;margin:40px 0;position:relative}
+  .timeline::before{content:'';position:absolute;top:40px;left:10%;right:10%;height:2px;background:linear-gradient(90deg,var(--neon-yellow),var(--neon-cyan),var(--neon-pink));z-index:0}
+  .tl-step{flex:1;text-align:center;position:relative;z-index:1;padding:0 8px}
+  .tl-dot{width:80px;height:80px;border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:28px;font-weight:900;border:2px solid;position:relative}
+  .tl-dot::after{content:'';position:absolute;inset:-6px;border-radius:50%;border:1px dashed currentColor;opacity:0.3;animation:spin 8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .tl-step:nth-child(1) .tl-dot{color:var(--neon-yellow);background:rgba(255,230,0,0.1);border-color:var(--neon-yellow);box-shadow:0 0 30px rgba(255,230,0,0.3)}
+  .tl-step:nth-child(2) .tl-dot{color:var(--neon-cyan);background:rgba(0,245,255,0.1);border-color:var(--neon-cyan);box-shadow:0 0 30px rgba(0,245,255,0.3)}
+  .tl-step:nth-child(3) .tl-dot{color:var(--neon-pink);background:rgba(255,45,120,0.1);border-color:var(--neon-pink);box-shadow:0 0 30px rgba(255,45,120,0.3)}
+  .tl-label{font-family:'Press Start 2P',monospace;font-size:8px;letter-spacing:1px;margin-bottom:8px}
+  .tl-step:nth-child(1) .tl-label{color:var(--neon-yellow)} .tl-step:nth-child(2) .tl-label{color:var(--neon-cyan)} .tl-step:nth-child(3) .tl-label{color:var(--neon-pink)}
+  .tl-desc{font-size:13px;color:var(--text-dim);line-height:1.6}
+
+  /* PROPERTY TABS */
+  .tab-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+  .tab-btn{font-family:'Press Start 2P',monospace;font-size:7px;letter-spacing:1px;padding:10px 14px;border:1px solid;background:transparent;cursor:pointer;transition:all 0.2s;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%)}
+  .tab-btn.academic{color:#4FC3F7;border-color:#4FC3F7} .tab-btn.academic.active,.tab-btn.academic:hover{background:rgba(79,195,247,0.15);text-shadow:0 0 8px #4FC3F7}
+  .tab-btn.amphi{color:var(--neon-purple);border-color:var(--neon-purple)} .tab-btn.amphi.active,.tab-btn.amphi:hover{background:rgba(191,0,255,0.15)}
+  .tab-btn.hostel{color:var(--neon-green);border-color:var(--neon-green)} .tab-btn.hostel.active,.tab-btn.hostel:hover{background:rgba(57,255,20,0.1)}
+  .tab-btn.food{color:var(--neon-orange);border-color:var(--neon-orange)} .tab-btn.food.active,.tab-btn.food:hover{background:rgba(255,107,0,0.15)}
+  .tab-btn.auditorium{color:var(--neon-pink);border-color:var(--neon-pink)} .tab-btn.auditorium.active,.tab-btn.auditorium:hover{background:rgba(255,45,120,0.15)}
+  .tab-panel{display:none} .tab-panel.active{display:block;animation:fadeIn 0.3s ease}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  /* SPECIAL TILES */
+  .tile-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:20px;margin-top:24px}
+  .tile-card{background:var(--card-bg);border:1px solid var(--card-border);padding:24px;position:relative;overflow:hidden;cursor:pointer;transition:all 0.3s}
+  .tile-card:hover{transform:translateY(-4px)}
+  .tile-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+  .tile-card.t-yellow::before{background:var(--neon-yellow);box-shadow:0 0 15px var(--neon-yellow)} .tile-card.t-cyan::before{background:var(--neon-cyan);box-shadow:0 0 15px var(--neon-cyan)} .tile-card.t-pink::before{background:var(--neon-pink);box-shadow:0 0 15px var(--neon-pink)} .tile-card.t-green::before{background:var(--neon-green);box-shadow:0 0 15px var(--neon-green)} .tile-card.t-orange::before{background:var(--neon-orange);box-shadow:0 0 15px var(--neon-orange)} .tile-card.t-purple::before{background:var(--neon-purple);box-shadow:0 0 15px var(--neon-purple)}
+  .tile-icon{font-size:36px;margin-bottom:10px;display:block}
+  .tile-name{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
+  .tile-card.t-yellow .tile-name{color:var(--neon-yellow)} .tile-card.t-cyan .tile-name{color:var(--neon-cyan)} .tile-card.t-pink .tile-name{color:var(--neon-pink)} .tile-card.t-green .tile-name{color:var(--neon-green)} .tile-card.t-orange .tile-name{color:var(--neon-orange)} .tile-card.t-purple .tile-name{color:var(--neon-purple)}
+  .tile-sub{font-size:12px;color:var(--text-dim);letter-spacing:1px;margin-bottom:14px;font-style:italic}
+  .tile-detail{display:none;margin-top:14px;border-top:1px solid var(--card-border);padding-top:14px;animation:fadeIn 0.2s ease}
+  .tile-card.open .tile-detail{display:block}
+  .tile-toggle{font-family:'Press Start 2P',monospace;font-size:7px;color:var(--text-dim);letter-spacing:1px}
+
+  /* DICE ROWS */
+  .dice-row{display:flex;align-items:center;gap:14px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.2s}
+  .dice-row:hover{background:rgba(255,255,255,0.03)}
+  .dice-face{width:42px;height:42px;background:var(--card-bg);border:2px solid var(--neon-yellow);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:15px;font-weight:900;color:var(--neon-yellow);flex-shrink:0;text-shadow:0 0 10px var(--neon-yellow);box-shadow:0 0 8px rgba(255,230,0,0.2)}
+  .dice-effect{font-size:15px;font-weight:600;color:var(--text-primary);flex:1}
+
+  /* FORMULA */
+  .formula-box{background:linear-gradient(135deg,rgba(255,230,0,0.05),rgba(0,245,255,0.05));border:1px solid rgba(255,230,0,0.3);padding:40px;text-align:center;position:relative;margin:32px 0;overflow:hidden}
+  .formula-box::before,.formula-box::after{content:'';position:absolute;width:50px;height:50px;border:2px solid rgba(255,230,0,0.2)}
+  .formula-box::before{top:10px;left:10px;border-right:none;border-bottom:none}
+  .formula-box::after{bottom:10px;right:10px;border-left:none;border-top:none}
+  .formula-title{font-family:'Press Start 2P',monospace;font-size:10px;color:var(--neon-yellow);letter-spacing:2px;margin-bottom:28px;text-shadow:0 0 15px var(--neon-yellow)}
+  .formula-parts{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:20px}
+  .formula-part{padding:12px 18px;font-family:'Orbitron',monospace;font-size:13px;font-weight:700;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%)}
+  .formula-part.prop{background:rgba(57,255,20,0.12);color:var(--neon-green);border:1px solid rgba(57,255,20,0.4)}
+  .formula-part.cash{background:rgba(0,245,255,0.12);color:var(--neon-cyan);border:1px solid rgba(0,245,255,0.4)}
+  .formula-part.credit{background:rgba(255,45,120,0.12);color:var(--neon-pink);border:1px solid rgba(255,45,120,0.4)}
+  .formula-plus{font-family:'Orbitron',monospace;font-size:22px;color:var(--text-dim);display:flex;align-items:center}
+  .formula-note{font-size:13px;color:var(--text-dim);letter-spacing:1px;font-style:italic}
+
+  /* LOAN TIERS */
+  .loan-tier{display:flex;align-items:center;gap:16px;padding:16px;margin-bottom:8px;background:var(--card-bg);border:1px solid var(--card-border);position:relative;overflow:hidden;transition:all 0.3s}
+  .loan-tier:hover{border-color:rgba(57,255,20,0.3)}
+  .loan-tier-bar{position:absolute;left:0;top:0;bottom:0;opacity:0.06}
+  .loan-credit-range{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;width:110px;flex-shrink:0;color:var(--text-dim)}
+  .loan-amount{font-family:'Orbitron',monospace;font-size:20px;font-weight:900;flex:1}
+
+  /* POWER DEEDS */
+  .power-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:20px;margin-top:24px}
+  .power-card{background:var(--card-bg);border:1px solid var(--card-border);padding:28px;position:relative;overflow:hidden;transition:all 0.3s}
+  .power-card::after{content:'POWER DEED';position:absolute;top:16px;right:-28px;font-family:'Press Start 2P',monospace;font-size:6px;letter-spacing:2px;transform:rotate(45deg);padding:4px 36px;opacity:0.7}
+  .power-card:nth-child(1)::after{background:rgba(0,245,255,0.2);color:var(--neon-cyan)} .power-card:nth-child(2)::after{background:rgba(191,0,255,0.2);color:var(--neon-purple)} .power-card:nth-child(3)::after{background:rgba(57,255,20,0.2);color:var(--neon-green)} .power-card:nth-child(4)::after{background:rgba(255,230,0,0.2);color:var(--neon-yellow)} .power-card:nth-child(5)::after{background:rgba(255,107,0,0.2);color:var(--neon-orange)} .power-card:nth-child(6)::after{background:rgba(255,45,120,0.2);color:var(--neon-pink)}
+  .power-card:hover{transform:translateY(-6px);border-color:rgba(255,255,255,0.12)}
+  .power-icon{font-size:40px;margin-bottom:12px;display:block}
+  .power-name{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;letter-spacing:2px;margin-bottom:16px;text-transform:uppercase}
+  .power-effect,.power-tradeoff{font-size:15px;font-weight:600;padding:8px 12px;margin-bottom:8px;display:flex;align-items:flex-start;gap:8px}
+  .power-effect{background:rgba(57,255,20,0.07);color:var(--neon-green);border-left:2px solid var(--neon-green)}
+  .power-tradeoff{background:rgba(255,45,120,0.07);color:var(--neon-pink);border-left:2px solid var(--neon-pink)}
+  .power-flavor{font-size:12px;color:var(--text-dim);font-style:italic;margin-top:10px;letter-spacing:1px}
+
+  /* ELIM STEPS */
+  .elim-steps{display:flex;flex-direction:column;gap:8px;margin:24px 0}
+  .elim-step{display:flex;align-items:center;gap:16px;padding:16px 20px;background:var(--card-bg);border:1px solid var(--card-border);position:relative;overflow:hidden;transition:all 0.3s}
+  .elim-step:hover{border-color:rgba(255,45,120,0.3)}
+  .elim-lap{font-family:'Orbitron',monospace;font-size:20px;font-weight:900;color:var(--neon-yellow);width:90px;flex-shrink:0}
+  .elim-bar{flex:1;height:8px;background:rgba(255,255,255,0.05);border-radius:4px;overflow:hidden}
+  .elim-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--neon-green),var(--neon-yellow))}
+  .elim-remaining{font-family:'Orbitron',monospace;font-size:16px;font-weight:700;width:80px;text-align:right;flex-shrink:0}
+
+  /* DARE CARDS */
+  .dare-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin-top:24px}
+  .dare-card{background:var(--card-bg);border:1px solid var(--card-border);padding:22px;position:relative;overflow:hidden;transition:all 0.3s}
+  .dare-card:hover{border-color:rgba(255,230,0,0.3);transform:translateY(-3px);box-shadow:0 8px 30px rgba(255,230,0,0.07)}
+  .dare-num{position:absolute;top:14px;right:14px;font-family:'Press Start 2P',monospace;font-size:22px;color:rgba(255,255,255,0.03);font-weight:900}
+  .dare-emoji{font-size:30px;margin-bottom:10px;display:block}
+  .dare-title{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:2px;color:var(--neon-yellow);text-transform:uppercase;margin-bottom:8px}
+  .dare-desc{font-size:15px;font-weight:600;color:var(--text-primary);line-height:1.5;margin-bottom:14px}
+  .dare-reward{display:inline-block;font-family:'Orbitron',monospace;font-size:12px;font-weight:700;color:var(--neon-green);background:rgba(57,255,20,0.1);border:1px solid rgba(57,255,20,0.3);padding:5px 12px}
+
+  /* RULE LIST */
+  .rule-list{list-style:none;padding:0}
+  .rule-list li{padding:9px 0 9px 26px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:16px;font-weight:600;color:var(--text-primary);position:relative;line-height:1.5}
+  .rule-list li::before{content:'▸';position:absolute;left:0;color:var(--neon-cyan);font-size:13px}
+  .rule-list li:last-child{border-bottom:none}
+
+  /* WINNER */
+  .winner-banner{background:linear-gradient(135deg,rgba(255,230,0,0.07),rgba(255,107,0,0.07),rgba(255,45,120,0.07));border:1px solid rgba(255,230,0,0.3);padding:60px 40px;text-align:center;position:relative;overflow:hidden;margin-top:40px}
+  .winner-banner::before,.winner-banner::after{content:'';position:absolute;width:200px;height:200px;border-radius:50%;opacity:0.06;animation:float 6s ease-in-out infinite}
+  .winner-banner::before{background:var(--neon-yellow);top:-100px;left:-100px}
+  .winner-banner::after{background:var(--neon-pink);bottom:-100px;right:-100px;animation-delay:-3s}
+  @keyframes float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-20px) scale(1.05)}}
+  .trophy{font-size:80px;display:block;margin-bottom:24px;animation:trophyGlow 2s ease-in-out infinite}
+  @keyframes trophyGlow{0%,100%{filter:drop-shadow(0 0 10px rgba(255,230,0,0.5))}50%{filter:drop-shadow(0 0 40px rgba(255,230,0,0.9)) drop-shadow(0 0 80px rgba(255,107,0,0.5))}}
+  .winner-text{font-family:'Orbitron',monospace;font-size:clamp(20px,4vw,40px);font-weight:900;background:linear-gradient(135deg,var(--neon-yellow),var(--neon-orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px}
+  .winner-sub{font-size:17px;color:var(--text-dim);letter-spacing:3px;text-transform:uppercase}
+
+  /* MISC */
+  .highlight-box{background:rgba(255,230,0,0.05);border-left:3px solid var(--neon-yellow);padding:14px 18px;margin:14px 0;font-size:16px;font-weight:600;color:var(--text-primary);line-height:1.6}
+  .note-box{background:rgba(0,245,255,0.04);border:1px dashed rgba(0,245,255,0.25);padding:12px 18px;margin:14px 0;font-size:14px;color:var(--text-dim);font-style:italic;letter-spacing:1px}
+  .tag{display:inline-block;font-family:'Press Start 2P',monospace;font-size:7px;letter-spacing:1px;padding:5px 10px;margin:2px;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%)}
+  .tag.yellow{background:rgba(255,230,0,0.12);color:var(--neon-yellow);border:1px solid rgba(255,230,0,0.3)}
+  .tag.cyan{background:rgba(0,245,255,0.08);color:var(--neon-cyan);border:1px solid rgba(0,245,255,0.3)}
+  footer{position:relative;z-index:1;text-align:center;padding:40px 20px;border-top:1px solid var(--card-border)}
+  footer p{font-family:'Press Start 2P',monospace;font-size:8px;color:var(--text-dim);letter-spacing:2px;line-height:2.2}
+
+  @media(max-width:600px){.timeline{flex-direction:column;gap:32px}.timeline::before{display:none}.tl-dot{width:60px;height:60px;font-size:22px}.section{padding:50px 16px}.formula-parts{flex-direction:column;align-items:center}}
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-badge">⚡ Official Event Rulebook ⚡</div>
+  <div class="cover-title">VITOPOLY</div>
+  <div class="cover-subtitle">RUSH 2.0</div>
+  <div class="cover-tagline">Campus Real-Estate Conquest · App-Driven · High Stakes</div>
+  <div class="cover-stats">
+    <div class="cover-stat"><span class="val">₹15K</span><div class="lbl">Starting Cash</div></div>
+    <div class="cover-stat"><span class="val">100</span><div class="lbl">Starting Credit</div></div>
+    <div class="cover-stat"><span class="val">3</span><div class="lbl">Rounds</div></div>
+    <div class="cover-stat"><span class="val">5</span><div class="lbl">Teams/Faction</div></div>
+    <div class="cover-stat"><span class="val">20</span><div class="lbl">Properties</div></div>
+  </div>
+  <div class="scroll-hint">▼ SCROLL TO PLAY ▼</div>
+</div>
+
+<!-- NAV -->
+<nav class="sticky-nav">
+  <a href="#overview" class="nav-item">OVERVIEW</a>
+  <a href="#round1" class="nav-item">ROUND 1</a>
+  <a href="#round2" class="nav-item">ROUND 2</a>
+  <a href="#properties" class="nav-item">PROPERTIES</a>
+  <a href="#tiles" class="nav-item">SPECIAL TILES</a>
+  <a href="#dice" class="nav-item">DICE RULES</a>
+  <a href="#credit" class="nav-item">CREDIT</a>
+  <a href="#loans" class="nav-item">LOANS</a>
+  <a href="#elimination" class="nav-item">ELIMINATION</a>
+  <a href="#round3" class="nav-item">ROUND 3</a>
+  <a href="#scoring" class="nav-item">SCORING</a>
+</nav>
+
+<!-- I. OVERVIEW -->
+<div class="section-divider"></div>
+<section class="section" id="overview">
+  <div class="section-header"><div class="section-num">01</div><h2 class="section-title"><span>Event</span> Overview</h2></div>
+  <div class="card cyan" style="margin-bottom:36px">
+    <p class="body-text">Vitopoly Rush 2.0 is a three-round, app-driven campus competition blending real-world mini-games with a modified real-estate conquest board game. Performance and assets carry forward across all rounds, culminating in a high-stakes Power Auction. The most strategic faction wins.</p>
+  </div>
+  <div class="timeline">
+    <div class="tl-step"><div class="tl-dot">1</div><div class="tl-label">ROUND 1</div><div class="tl-desc">Campus Mini-Game Sprint<br><br>1 Hour<br>Build capital &amp; credit</div></div>
+    <div class="tl-step"><div class="tl-dot">2</div><div class="tl-label">ROUND 2</div><div class="tl-desc">Vitopoly Conquest<br><br>2 Hours<br>Real-estate empire</div></div>
+    <div class="tl-step"><div class="tl-dot">3</div><div class="tl-label">ROUND 3</div><div class="tl-desc">Power Auction Protocol<br><br>15 min + Auction<br>Deploy Power Deeds</div></div>
+  </div>
+  <div class="grid-2" style="margin-top:32px">
+    <div class="stat-box yellow"><span class="num">₹15,000</span><div class="lbl">Starting Cash per Team</div></div>
+    <div class="stat-box cyan"><span class="num">100</span><div class="lbl">Starting Credit Score</div></div>
+  </div>
+</section>
+
+<!-- II. ROUND 1 -->
+<div class="section-divider"></div>
+<section class="section" id="round1">
+  <div class="section-header"><div class="section-num">02</div><h2 class="section-title"><span>Round 1</span> — Mini-Game Sprint</h2></div>
+  <div class="card yellow" style="margin-bottom:28px"><div class="card-title yellow">OBJECTIVE</div><p class="body-text">Teams travel across campus to participate in various mini-games, building capital and credit before the main board game. Duration: <strong style="color:var(--neon-yellow)">1 Hour.</strong></p></div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Action</th><th>Cash Effect</th><th>Credit Effect</th></tr></thead>
+      <tbody>
+        <tr><td>Entry Fee (per attempt)</td><td class="vn">−₹100</td><td class="vd">No change</td></tr>
+        <tr><td>Win</td><td class="vp">+₹500 &nbsp;<span style="color:var(--text-dim);font-size:13px">(net +₹400)</span></td><td class="vp">+15 Credit</td></tr>
+        <tr><td>Loss</td><td class="vn">−₹100 (entry fee lost)</td><td class="vn">−5 Credit</td></tr>
+        <tr><td>No Participation</td><td class="vd">No change</td><td class="vd">No change</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note-box">Credit rewards consistency, not spam — 10 wins = +150 Credit · 10 losses = −50 Credit</div>
+  <div class="grid-3" style="margin-top:28px">
+    <div class="stat-box pink"><span class="num" style="font-size:20px">No Play</span><div class="lbl">Cash stays ₹15,000</div></div>
+    <div class="stat-box yellow"><span class="num" style="font-size:20px">10 Losses</span><div class="lbl">Cash →₹14K / Credit −50</div></div>
+    <div class="stat-box green"><span class="num" style="font-size:20px">10 Wins</span><div class="lbl">Cash →₹19K / Credit +150</div></div>
+  </div>
+</section>
+
+<!-- III. ROUND 2 -->
+<div class="section-divider"></div>
+<section class="section" id="round2">
+  <div class="section-header"><div class="section-num">03</div><h2 class="section-title"><span>Round 2</span> — Vitopoly Conquest</h2></div>
+  <div class="grid-2">
+    <div class="card cyan"><div class="card-title">STRUCTURE</div><ul class="rule-list"><li>Teams drafted into Factions of 5</li><li>Dedicated Vitopoly Board per Faction</li><li>Cash &amp; Credit from Round 1 carry forward</li><li>Duration: 2 Hours hard cap</li></ul></div>
+    <div class="card pink"><div class="card-title pink">FACTION MODERATOR</div><ul class="rule-list"><li>Acts as the Bank</li><li>App Verifier &amp; Rule Enforcer</li><li>Transaction Authority</li><li>Loan issuer &amp; arbiter</li></ul></div>
+  </div>
+  <div class="card yellow" style="margin-top:20px"><div class="card-title yellow">📱 APP-DRIVEN ECONOMY</div><p class="body-text" style="margin-bottom:12px">ALL transactions must be validated through the official Vitopoly App. Manual cash exchange is <strong style="color:var(--neon-pink)">strictly prohibited.</strong></p><div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px"><span class="tag yellow">Buy/Sell</span><span class="tag yellow">Mortgage</span><span class="tag yellow">Pay Rent</span><span class="tag yellow">Pay Taxes</span><span class="tag yellow">Loans</span><span class="tag yellow">Jail</span><span class="tag yellow">Utilities</span></div></div>
+  <div class="card green" style="margin-top:20px"><div class="card-title green">🏗 PROPERTY RULES</div><ul class="rule-list"><li>Must land on unowned property to buy it</li><li>Cannot buy if insufficient cash</li><li>House must exist before Hotel can be built</li><li>Only 1 House → 1 Hotel per property (no stacking)</li><li>Rent replaces previous level — does NOT stack</li><li>Mortgage allowed anytime except during an opponent's turn</li><li>Upgrade costs reduced by 20% from standard Monopoly rates</li><li>AB3 is a buyable property</li></ul></div>
+</section>
+
+<!-- IV. PROPERTIES -->
+<div class="section-divider"></div>
+<section class="section" id="properties">
+  <div class="section-header"><div class="section-num">04</div><h2 class="section-title"><span>Campus</span> Properties</h2></div>
+  <div class="tab-bar">
+    <button class="tab-btn academic active" onclick="switchTab('academic')">🏫 ACADEMIC</button>
+    <button class="tab-btn amphi" onclick="switchTab('amphi')">🎭 AMPHITHEATRES</button>
+    <button class="tab-btn hostel" onclick="switchTab('hostel')">🏠 HOSTEL</button>
+    <button class="tab-btn food" onclick="switchTab('food')">🍟 FOOD STREET</button>
+    <button class="tab-btn auditorium" onclick="switchTab('auditorium')">🎤 AUDITORIUMS</button>
+  </div>
+  <div class="tab-panel active" id="tab-academic">
+    <div class="tbl-wrap"><table><thead><tr><th>Property</th><th>Base Price</th><th>Base Rent</th><th>House Cost</th><th>House Rent</th><th>Hotel Cost</th><th>Hotel Rent</th></tr></thead><tbody>
+      <tr><td>AB1</td><td>₹1,400</td><td>₹220</td><td>₹440</td><td>₹500</td><td>₹760</td><td>₹950</td></tr>
+      <tr><td>AB2</td><td>₹1,600</td><td>₹260</td><td>₹520</td><td>₹600</td><td>₹880</td><td>₹1,100</td></tr>
+      <tr><td>AB3</td><td>₹1,700</td><td>₹280</td><td>₹545</td><td>₹650</td><td>₹960</td><td>₹1,150</td></tr>
+      <tr><td>AB4</td><td>₹1,800</td><td>₹300</td><td>₹575</td><td>₹700</td><td>₹1,000</td><td>₹1,250</td></tr>
+      <tr><td>AB5</td><td>₹2,000</td><td>₹340</td><td>₹640</td><td>₹800</td><td>₹1,120</td><td>₹1,450</td></tr>
+    </tbody></table></div>
+  </div>
+  <div class="tab-panel" id="tab-amphi">
+    <div class="tbl-wrap"><table><thead><tr><th>Property</th><th>Base Price</th><th>Base Rent</th><th>House Cost</th><th>House Rent</th><th>Hotel Cost</th><th>Hotel Rent</th></tr></thead><tbody>
+      <tr><td>MBA Amphi</td><td>₹2,400</td><td>₹380</td><td>₹760</td><td>₹850</td><td>₹1,320</td><td>₹1,700</td></tr>
+      <tr><td>AB1 Amphi</td><td>₹2,200</td><td>₹350</td><td>₹700</td><td>₹800</td><td>₹1,230</td><td>₹1,600</td></tr>
+      <tr><td>AB3 Amphi</td><td>₹2,600</td><td>₹420</td><td>₹830</td><td>₹950</td><td>₹1,450</td><td>₹1,900</td></tr>
+    </tbody></table></div>
+  </div>
+  <div class="tab-panel" id="tab-hostel">
+    <div class="tbl-wrap"><table><thead><tr><th>Property</th><th>Base Price</th><th>Base Rent</th><th>House Cost</th><th>House Rent</th><th>Hotel Cost</th><th>Hotel Rent</th></tr></thead><tbody>
+      <tr><td>A Block</td><td>₹1,900</td><td>₹300</td><td>₹600</td><td>₹650</td><td>₹1,060</td><td>₹1,300</td></tr>
+      <tr><td>B Block</td><td>₹2,000</td><td>₹320</td><td>₹640</td><td>₹700</td><td>₹1,120</td><td>₹1,400</td></tr>
+      <tr><td>C Block</td><td>₹2,200</td><td>₹360</td><td>₹700</td><td>₹800</td><td>₹1,230</td><td>₹1,600</td></tr>
+      <tr><td>D Block</td><td>₹2,100</td><td>₹340</td><td>₹670</td><td>₹750</td><td>₹1,175</td><td>₹1,500</td></tr>
+      <tr><td>E Block</td><td>₹2,300</td><td>₹380</td><td>₹735</td><td>₹850</td><td>₹1,290</td><td>₹1,700</td></tr>
+    </tbody></table></div>
+  </div>
+  <div class="tab-panel" id="tab-food">
+    <div class="tbl-wrap"><table><thead><tr><th>Property</th><th>Base Price</th><th>Base Rent</th><th>House Cost</th><th>House Rent</th><th>Hotel Cost</th><th>Hotel Rent</th></tr></thead><tbody>
+      <tr><td>V Mart</td><td>₹2,400</td><td>₹420</td><td>₹760</td><td>₹900</td><td>₹1,320</td><td>₹1,800</td></tr>
+      <tr><td>Gazebo</td><td>₹2,600</td><td>₹450</td><td>₹830</td><td>₹1,000</td><td>₹1,450</td><td>₹2,000</td></tr>
+      <tr><td>Gymkhana</td><td>₹2,800</td><td>₹480</td><td>₹900</td><td>₹1,100</td><td>₹1,570</td><td>₹2,200</td></tr>
+      <tr><td>Hunger</td><td>₹2,500</td><td>₹430</td><td>₹800</td><td>₹950</td><td>₹1,400</td><td>₹1,900</td></tr>
+      <tr><td>NS</td><td>₹2,900</td><td>₹500</td><td>₹930</td><td>₹1,200</td><td>₹1,620</td><td>₹2,300</td></tr>
+    </tbody></table></div>
+  </div>
+  <div class="tab-panel" id="tab-auditorium">
+    <div class="tbl-wrap"><table><thead><tr><th>Property</th><th>Base Price</th><th>Base Rent</th><th>House Cost</th><th>House Rent</th><th>Hotel Cost</th><th>Hotel Rent</th></tr></thead><tbody>
+      <tr><td>MG</td><td>₹3,200</td><td>₹520</td><td>₹1,020</td><td>₹1,200</td><td>₹1,790</td><td>₹2,400</td></tr>
+      <tr><td>Kamaraj</td><td>₹3,400</td><td>₹560</td><td>₹1,090</td><td>₹1,300</td><td>₹1,900</td><td>₹2,600</td></tr>
+      <tr><td>Netaji</td><td>₹3,600</td><td>₹600</td><td>₹1,150</td><td>₹1,400</td><td>₹2,020</td><td>₹2,800</td></tr>
+    </tbody></table></div>
+  </div>
+  <div class="highlight-box" style="margin-top:24px"><strong style="color:var(--neon-cyan)">RENT RULE:</strong> No upgrade → Base Rent &nbsp;|&nbsp; House → House Rent &nbsp;|&nbsp; Hotel → Hotel Rent. Rent replaces the previous level and does NOT stack.</div>
+</section>
+
+<!-- V. SPECIAL TILES -->
+<div class="section-divider"></div>
+<section class="section" id="tiles">
+  <div class="section-header"><div class="section-num">05</div><h2 class="section-title"><span>Special</span> Tiles</h2></div>
+  <div class="card green" style="margin-bottom:24px"><div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap"><span style="font-size:44px">🟢</span><div><div class="card-title green">PASSING START (GO)</div><p class="body-text">Every pass → <strong style="color:var(--neon-green)">+₹2,500</strong> &nbsp;|&nbsp; Every 3rd lap → <strong style="color:var(--neon-green)">+100 Credit</strong></p></div></div></div>
+  <p style="font-family:'Press Start 2P',monospace;font-size:8px;color:var(--text-dim);letter-spacing:2px;margin-bottom:16px">▼ TAP ANY TILE TO EXPAND RULES</p>
+  <div class="tile-grid">
+
+    <div class="tile-card t-pink" onclick="toggleTile(this)">
+      <span class="tile-icon">🎓</span><div class="tile-name">Passing By Extra Class</div><div class="tile-sub">Detention / Jail Equivalent</div><div class="tile-toggle">▼ TAP TO EXPAND</div>
+      <div class="tile-detail">
+        <p style="color:var(--neon-pink);font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:2px;margin-bottom:10px">DETAINED FOR ACADEMIC VIOLATION</p>
+        <ul class="rule-list" style="margin-bottom:14px"><li>Skip next 1 turn</li><li>Cannot collect rent during detention</li><li>Cannot build/upgrade during detention</li><li>Auto-released after 1 skipped turn</li></ul>
+        <p style="font-family:'Orbitron',monospace;font-size:10px;color:var(--neon-yellow);letter-spacing:2px;margin-bottom:8px">ESCAPE OPTIONS</p>
+        <ul class="rule-list"><li>Pay ₹1,000 fine</li><li>Pay 50 Credit</li><li>Roll dice — 5 or 6 = free release</li></ul>
+      </div>
+    </div>
+
+    <div class="tile-card t-cyan" onclick="toggleTile(this)">
+      <span class="tile-icon">📚</span><div class="tile-name">Central Library</div><div class="tile-sub">Strategic Knowledge Hub</div><div class="tile-toggle">▼ TAP TO EXPAND</div>
+      <div class="tile-detail">
+        <p class="body-text" style="font-size:14px;margin-bottom:12px">Choose ONE option:</p>
+        <div style="padding:10px;background:rgba(0,245,255,0.06);border-left:2px solid var(--neon-cyan);margin-bottom:8px;font-size:15px;font-weight:600"><strong style="color:var(--neon-cyan)">A – Research Boost:</strong> Pay ₹1,000 → Gain +100 Credit</div>
+        <div style="padding:10px;background:rgba(0,245,255,0.06);border-left:2px solid var(--neon-cyan);margin-bottom:8px;font-size:15px;font-weight:600"><strong style="color:var(--neon-cyan)">B – Competitive Edge:</strong> Gain +50 Credit AND one opponent loses 25 Credit</div>
+        <div style="padding:10px;background:rgba(0,245,255,0.06);border-left:2px solid var(--neon-cyan);font-size:15px;font-weight:600"><strong style="color:var(--neon-cyan)">C – Deep Study:</strong> Skip next turn → Gain +150 Credit</div>
+      </div>
+    </div>
+
+    <div class="tile-card t-orange" onclick="toggleTile(this)">
+      <span class="tile-icon">🏛</span><div class="tile-name">Admin Block</div><div class="tile-sub">Administrative Audit</div><div class="tile-toggle">▼ TAP TO EXPAND</div>
+      <div class="tile-detail">
+        <div class="dice-row"><div class="dice-face">1–2</div><div class="dice-effect vn">Pay ₹1,000 + Lose 50 Credit</div></div>
+        <div class="dice-row"><div class="dice-face">3–4</div><div class="dice-effect vw">Pay ₹800</div></div>
+        <div class="dice-row"><div class="dice-face">5–6</div><div class="dice-effect vp">Choose one opponent → They lose 75 Credit</div></div>
+      </div>
+    </div>
+
+    <div class="tile-card t-green" onclick="toggleTile(this)">
+      <span class="tile-icon">💓</span><div class="tile-name">Health Center</div><div class="tile-sub">Emergency Recovery</div><div class="tile-toggle">▼ TAP TO EXPAND</div>
+      <div class="tile-detail">
+        <div class="dice-row"><div style="font-family:'Orbitron',monospace;font-size:10px;color:var(--neon-cyan);width:110px;flex-shrink:0">Cash &lt; ₹3,000</div><div class="dice-effect vp">Gain ₹1,500 Relief Fund</div></div>
+        <div class="dice-row"><div style="font-family:'Orbitron',monospace;font-size:10px;color:var(--neon-cyan);width:110px;flex-shrink:0">Credit &lt; 100</div><div class="dice-effect vp">Gain +100 Credit</div></div>
+        <div class="dice-row"><div style="font-family:'Orbitron',monospace;font-size:10px;color:var(--neon-cyan);width:110px;flex-shrink:0">Otherwise</div><div class="dice-effect vn">Pay ₹700</div></div>
+      </div>
+    </div>
+
+    <div class="tile-card t-yellow" onclick="toggleTile(this)">
+      <span class="tile-icon">🏨</span><div class="tile-name">Guest House</div><div class="tile-sub">Elite Networking</div><div class="tile-toggle">▼ TAP TO EXPAND</div>
+      <div class="tile-detail">
+        <div class="dice-row"><div class="dice-face">1–2</div><div class="dice-effect vn">Pay ₹1,200</div></div>
+        <div class="dice-row"><div class="dice-face">3–4</div><div class="dice-effect vd">Nothing</div></div>
+        <div class="dice-row"><div class="dice-face">5</div><div class="dice-effect vp">Next rent you collect is doubled</div></div>
+        <div class="dice-row"><div class="dice-face">6</div><div class="dice-effect vp">Untouchable for 1 full round — no rent, no penalties</div></div>
+      </div>
+    </div>
+
+    <div class="tile-card t-purple" onclick="toggleTile(this)">
+      <span class="tile-icon">✈</span><div class="tile-name">Vacations</div><div class="tile-sub">Strategic Escape</div><div class="tile-toggle">▼ TAP TO EXPAND</div>
+      <div class="tile-detail">
+        <div class="dice-row"><div class="dice-face">1</div><div class="dice-effect vn">Skip next turn</div></div>
+        <div class="dice-row"><div class="dice-face">2</div><div class="dice-effect vw">Skip turn + Gain ₹800</div></div>
+        <div class="dice-row"><div class="dice-face">3</div><div class="dice-effect vw">Choose opponent → They skip next turn</div></div>
+        <div class="dice-row"><div class="dice-face">4</div><div class="dice-effect vp">Choose opponent → They pay you ₹1,000</div></div>
+        <div class="dice-row"><div class="dice-face">5</div><div class="dice-effect vw">Skip turn BUT next rent collected is doubled</div></div>
+        <div class="dice-row"><div class="dice-face">6</div><div class="dice-effect vp">Immune from all rent &amp; penalties for 1 full round</div></div>
+      </div>
+    </div>
+
+    <div class="tile-card t-cyan" onclick="toggleTile(this)">
+      <span class="tile-icon">🕰</span><div class="tile-name">Clock Court</div><div class="tile-sub">Time Violation Chaos</div><div class="tile-toggle">▼ TAP TO EXPAND</div>
+      <div class="tile-detail">
+        <div class="dice-row"><div class="dice-face">1</div><div class="dice-effect vn">Lose 75 Credit</div></div>
+        <div class="dice-row"><div class="dice-face">2</div><div class="dice-effect vn">Pay ₹1,000</div></div>
+        <div class="dice-row"><div class="dice-face">3</div><div class="dice-effect vp">Everyone pays you ₹300</div></div>
+        <div class="dice-row"><div class="dice-face">4</div><div class="dice-effect vn">Pay ₹500 to every player</div></div>
+        <div class="dice-row"><div class="dice-face">5</div><div class="dice-effect vw">Freeze one opponent for 1 turn</div></div>
+        <div class="dice-row"><div class="dice-face">6</div><div class="dice-effect vp">Gain +100 Credit + ₹1,000</div></div>
+      </div>
+    </div>
+
+    <div class="tile-card t-pink" onclick="toggleTile(this)">
+      <span class="tile-icon">🚨</span><div class="tile-name">Hostel Fine</div><div class="tile-sub">Strict Discipline</div><div class="tile-toggle">▼ TAP TO EXPAND</div>
+      <div class="tile-detail">
+        <div class="highlight-box">Pay <strong style="color:var(--neon-pink)">₹1,500</strong> &nbsp;OR&nbsp; Mortgage one property instantly. <strong style="color:var(--neon-pink)">No escape.</strong></div>
+      </div>
+    </div>
+
+    <div class="tile-card t-yellow" onclick="toggleTile(this)">
+      <span class="tile-icon">❓</span><div class="tile-name">Risk &amp; Reward</div><div class="tile-sub">Dare Card Tile</div><div class="tile-toggle">▼ TAP TO EXPAND</div>
+      <div class="tile-detail">
+        <p class="body-text" style="margin-bottom:12px;font-size:15px">Draw a Dare Card. Then choose:</p>
+        <div style="padding:10px;background:rgba(57,255,20,0.08);border-left:2px solid var(--neon-green);margin-bottom:8px;font-size:15px;font-weight:600">✅ <strong style="color:var(--neon-green)">Perform the dare</strong> → Receive the reward</div>
+        <div style="padding:10px;background:rgba(255,45,120,0.08);border-left:2px solid var(--neon-pink);font-size:15px;font-weight:600">❌ <strong style="color:var(--neon-pink)">Refuse</strong> → Pay ₹1,200 OR Lose 75 Credit</div>
+      </div>
+    </div>
+
+    <div class="tile-card t-orange" onclick="toggleTile(this)">
+      <span class="tile-icon">🎓</span><div class="tile-name">Extra Class</div><div class="tile-sub">Chaos Card Deck — 15 Cards</div><div class="tile-toggle">▼ TAP TO EXPAND</div>
+      <div class="tile-detail">
+        <ul class="rule-list" style="font-size:14px">
+          <li>Swap one property with an opponent</li><li>Collect ₹500 from every player</li><li>Pay ₹500 to every player</li><li>Freeze one opponent for 1 turn</li><li>Gain +25 Credit from every player</li><li>Lose 25 Credit to every player</li><li>Double your next rent collection</li><li>Gain immunity from next penalty</li><li>Take ₹700 from richest player</li><li>Give ₹700 to poorest player</li><li>Choose two players → They swap a property</li><li>Gain ₹1,000</li><li>Lose ₹800</li><li>Gain +75 Credit</li><li>Lose 50 Credit</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tile-card t-green" onclick="toggleTile(this)">
+      <span class="tile-icon">🎒</span><div class="tile-name">Campus Treasure Chest</div><div class="tile-sub">Pure Reward Deck — 10 Cards</div><div class="tile-toggle">▼ TAP TO EXPAND</div>
+      <div class="tile-detail">
+        <ul class="rule-list" style="font-size:14px">
+          <li>Gain ₹1,500</li><li>Gain ₹1,000 + 50 Credit</li><li>Free House Upgrade on one property</li><li>Double next rent collection</li><li>Immunity from next penalty</li><li>Take ₹500 from richest player</li><li>Everyone gives you ₹300</li><li>Gain +100 Credit</li><li>Convert 50 Credit → ₹1,200</li><li>Bank pays your next fine</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- DARE CARDS -->
+  <h3 style="font-family:'Orbitron',monospace;font-size:18px;color:var(--neon-yellow);letter-spacing:3px;text-transform:uppercase;margin:52px 0 24px">🎭 Official Campus Dare Cards</h3>
+  <div class="dare-grid">
+    <div class="dare-card"><div class="dare-num">01</div><span class="dare-emoji">🎤</span><div class="dare-title">Classroom Announcement</div><div class="dare-desc">Go to the nearest classroom and shout "VITOPOLY RUSH!" three times loudly.</div><span class="dare-reward">Gain ₹1,000</span></div>
+    <div class="dare-card"><div class="dare-num">02</div><span class="dare-emoji">⚡</span><div class="dare-title">Custom Dare</div><div class="dare-desc">The moderator will provide a custom DARE.</div><span class="dare-reward" style="color:var(--neon-yellow);border-color:rgba(255,230,0,0.3);background:rgba(255,230,0,0.1)">Determined by Moderator</span></div>
+    <div class="dare-card"><div class="dare-num">03</div><span class="dare-emoji">🤳</span><div class="dare-title">Social Butterfly</div><div class="dare-desc">Take a selfie with 3 random strangers. All three must clearly appear in the picture.</div><span class="dare-reward">Gain ₹800</span></div>
+    <div class="dare-card"><div class="dare-num">04</div><span class="dare-emoji">😂</span><div class="dare-title">Joke Diplomacy</div><div class="dare-desc">Go to another Faction, tell them a joke, make them clap. Clap must be audible.</div><span class="dare-reward">Gain ₹900</span></div>
+    <div class="dare-card"><div class="dare-num">05</div><span class="dare-emoji">📈</span><div class="dare-title">Investment Guru</div><div class="dare-desc">Ask a random person their best investment advice. Come back and repeat it loudly at your table.</div><span class="dare-reward">Gain +75 Credit</span></div>
+    <div class="dare-card"><div class="dare-num">06</div><span class="dare-emoji">👑</span><div class="dare-title">Confidence Move</div><div class="dare-desc">"Bro, don't worry… I'm winning this. You guys are just participating." Full confidence required.</div><span class="dare-reward">Gain ₹1,200</span></div>
+    <div class="dare-card"><div class="dare-num">07</div><span class="dare-emoji">😴</span><div class="dare-title">Class Inspector</div><div class="dare-desc">Tell a stranger: "Bro, I've seen you in class. Why are you always sleeping?" Casually.</div><span class="dare-reward">Gain ₹700 + 25 Credit</span></div>
+  </div>
+</section>
+
+<!-- VI. DICE RULES -->
+<div class="section-divider"></div>
+<section class="section" id="dice">
+  <div class="section-header"><div class="section-num">06</div><h2 class="section-title"><span>Dice</span> Rules</h2></div>
+  <div class="grid-3">
+    <div class="card cyan"><div class="card-title">🎲 BASIC MOVEMENT</div><p class="body-text">Standard 2-dice system (6-sided each). Move forward equal to total rolled. Actions triggered based on landing tile.</p></div>
+    <div class="card yellow"><div class="card-title yellow">⚡ DOUBLES RULE</div><p class="body-text">Roll doubles → One extra roll. Roll <strong style="color:var(--neon-pink)">3 consecutive doubles</strong> → Sent directly to Detention. Turn ends immediately.</p></div>
+    <div class="card green"><div class="card-title green">🔄 EXTRA TURN CAP</div><p class="body-text">Max <strong style="color:var(--neon-green)">2 turns in a row.</strong> Extra turn granted by doubles OR if a Special Tile explicitly grants it. No stacking beyond 2.</p></div>
+  </div>
+</section>
+
+<!-- VII. CREDIT -->
+<div class="section-divider"></div>
+<section class="section" id="credit">
+  <div class="section-header"><div class="section-num">07</div><h2 class="section-title"><span>Credit</span> Score System</h2></div>
+  <div class="card cyan" style="margin-bottom:28px"><p class="body-text">Credit is your financial reputation. It gates loan eligibility and contributes 30% to your final Vitopoly Score.</p></div>
+  <h3 style="font-family:'Orbitron',monospace;font-size:13px;color:var(--neon-yellow);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px">ROUND 1 — MINI-GAME CREDIT</h3>
+  <div class="grid-2" style="margin-bottom:32px">
+    <div class="stat-box green"><span class="num">+15</span><div class="lbl">Credit per Win</div></div>
+    <div class="stat-box pink"><span class="num">−5</span><div class="lbl">Credit per Loss</div></div>
+  </div>
+  <h3 style="font-family:'Orbitron',monospace;font-size:13px;color:var(--neon-yellow);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px">ROUND 2 — CREDIT EVENTS</h3>
+  <div class="tbl-wrap"><table><thead><tr><th>Event</th><th>Credit Effect</th></tr></thead><tbody>
+    <tr><td>Fail to pay rent immediately</td><td class="vn">−25 Credit</td></tr>
+    <tr><td>Fail to pay tax (Admin/Clock/Hostel Fine)</td><td class="vn">−30 Credit</td></tr>
+    <tr><td>Loan repaid on time</td><td class="vp">+20 Credit</td></tr>
+    <tr><td>Loan overdue / unpaid</td><td class="vn">−50 Credit</td></tr>
+  </tbody></table></div>
+</section>
+
+<!-- VIII. LOANS -->
+<div class="section-divider"></div>
+<section class="section" id="loans">
+  <div class="section-header"><div class="section-num">08</div><h2 class="section-title"><span>Loan</span> System</h2></div>
+  <div class="card yellow" style="margin-bottom:28px"><div class="card-title yellow">WHEN CAN YOU TAKE A LOAN?</div><p class="body-text">Loans issued by the Faction Moderator via the app. Only during: <strong style="color:var(--neon-yellow)">your own turn</strong> OR the <strong style="color:var(--neon-yellow)">15-minute Strategy Window</strong> before Round 3.</p></div>
+  <h3 style="font-family:'Orbitron',monospace;font-size:13px;color:var(--neon-cyan);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px">💳 CREDIT-GATED LOAN TIERS</h3>
+  <div class="loan-tier"><div class="loan-tier-bar" style="width:0%;background:var(--neon-pink)"></div><div class="loan-credit-range">0 – 99</div><div class="loan-amount vn">❌ No Loan</div></div>
+  <div class="loan-tier"><div class="loan-tier-bar" style="width:30%;background:var(--neon-yellow)"></div><div class="loan-credit-range">100 – 149</div><div class="loan-amount" style="color:var(--neon-yellow)">Up to ₹2,000</div></div>
+  <div class="loan-tier"><div class="loan-tier-bar" style="width:50%;background:var(--neon-yellow)"></div><div class="loan-credit-range">150 – 249</div><div class="loan-amount" style="color:var(--neon-yellow)">Up to ₹4,000</div></div>
+  <div class="loan-tier"><div class="loan-tier-bar" style="width:75%;background:var(--neon-green)"></div><div class="loan-credit-range">250 – 349</div><div class="loan-amount" style="color:var(--neon-green)">Up to ₹6,000</div></div>
+  <div class="loan-tier"><div class="loan-tier-bar" style="width:100%;background:var(--neon-green)"></div><div class="loan-credit-range">350 – 500</div><div class="loan-amount" style="color:var(--neon-green);text-shadow:0 0 15px var(--neon-green)">Up to ₹8,000</div></div>
+  <div class="grid-3" style="margin-top:28px">
+    <div class="stat-box orange"><span class="num">10%</span><div class="lbl">Flat Interest Rate</div></div>
+    <div class="stat-box cyan"><span class="num">50%</span><div class="lbl">Max % of Property Value</div></div>
+    <div class="stat-box green"><span class="num">+20</span><div class="lbl">Credit: Early Repayment Bonus</div></div>
+  </div>
+  <div class="card pink" style="margin-top:24px"><div class="card-title pink">⚠ DEFAULT PENALTIES</div><ul class="rule-list"><li>Immediate: −75 Credit + additional 5% interest</li><li>Cannot take another loan until fully repaid</li><li>Still unpaid at next check → Forced mortgage of highest property</li></ul></div>
+  <div class="note-box">Loan due date: Before the next Elimination Check (every 3 laps) OR before Round 3 Auction — whichever comes first.</div>
+</section>
+
+<!-- IX. ELIMINATION -->
+<div class="section-divider"></div>
+<section class="section" id="elimination">
+  <div class="section-header"><div class="section-num">09</div><h2 class="section-title"><span>Elimination</span> — Defaulter Status</h2></div>
+  <div class="card pink" style="margin-bottom:28px"><div class="card-title pink">HOW IT WORKS</div><p class="body-text">Every 3 full laps, the team with the <strong style="color:var(--neon-pink)">lowest Vitopoly Score</strong> is eliminated and declared a Defaulter. If the 2-hour cap hits, rankings freeze at that instant.</p></div>
+  <div class="elim-steps">
+    <div class="elim-step"><div class="elim-lap">LAP 3</div><div class="elim-bar"><div class="elim-bar-fill" style="width:80%"></div></div><div class="elim-remaining vp">4 Remain</div></div>
+    <div class="elim-step"><div class="elim-lap">LAP 6</div><div class="elim-bar"><div class="elim-bar-fill" style="width:60%"></div></div><div class="elim-remaining vw">3 Remain</div></div>
+    <div class="elim-step"><div class="elim-lap">LAP 9</div><div class="elim-bar"><div class="elim-bar-fill" style="width:40%"></div></div><div class="elim-remaining vw">2 Remain</div></div>
+    <div class="elim-step"><div class="elim-lap">LAP 12</div><div class="elim-bar"><div class="elim-bar-fill" style="width:20%;background:linear-gradient(90deg,var(--neon-pink),var(--neon-yellow))"></div></div><div class="elim-remaining vn">Final Battle</div></div>
+  </div>
+</section>
+
+<!-- X. ROUND 3 -->
+<div class="section-divider"></div>
+<section class="section" id="round3">
+  <div class="section-header"><div class="section-num">10</div><h2 class="section-title"><span>Round 3</span> — Power Auction</h2></div>
+  <div class="grid-2">
+    <div class="card yellow"><div class="card-title yellow">🔍 AUCTION ITEMS</div><ul class="rule-list"><li>All Defaulters' highest-value properties seized by Bank</li><li>Each seized card "flipped" — hidden Power Deed activates</li></ul></div>
+    <div class="card cyan"><div class="card-title">⏱ 15-MIN STRATEGY WINDOW</div><ul class="rule-list"><li>Final Score Formula revealed to all teams</li><li>Buy, Sell, Mortgage, Loan, Repay, Strategize</li><li>No auctions yet — pure planning phase</li><li>Panic, calculation, alliances, betrayal</li></ul></div>
+  </div>
+  <div class="card green" style="margin-top:20px"><div class="card-title green">🔨 AUCTION FORMAT</div><ul class="rule-list"><li>Live physical auction moderated by Bank Authority</li><li>Teams bid with in-game cash</li><li>Winning bidder receives the Power Deed™</li><li>All Power Deeds executed immediately after auction</li><li>Moderator updates all changes in the Vitopoly App</li></ul></div>
+  <h3 style="font-family:'Orbitron',monospace;font-size:18px;color:var(--neon-pink);letter-spacing:3px;text-transform:uppercase;margin:48px 0 24px">⚡ Power Deeds™</h3>
+  <div class="power-grid">
+    <div class="power-card"><span class="power-icon">🧊</span><div class="power-name" style="color:var(--neon-cyan)">Azure Liquidity Surge</div><div class="power-effect">▲ +90% to Cash</div><div class="power-tradeoff">▼ −50% to Property Value</div><div class="power-flavor">Cloud scaling. Fast money, asset sacrifice.</div></div>
+    <div class="power-card"><span class="power-icon">🧠</span><div class="power-name" style="color:var(--neon-purple)">Cognitive Credit Amplifier</div><div class="power-effect">▲ +40% to Credit</div><div class="power-tradeoff">▼ −30% to Cash</div><div class="power-flavor">AI intelligence boost. Brain over liquidity.</div></div>
+    <div class="power-card"><span class="power-icon">🏢</span><div class="power-name" style="color:var(--neon-green)">Enterprise Asset Overclock</div><div class="power-effect">▲ +60% to Property Value</div><div class="power-tradeoff">▼ −25% to Credit</div><div class="power-flavor">Enterprise scaling. Infrastructure over reputation.</div></div>
+    <div class="power-card"><span class="power-icon">🔄</span><div class="power-name" style="color:var(--neon-yellow)">System Merge Protocol</div><div class="power-effect">▲ Swap total Cash with one chosen opponent</div><div class="power-tradeoff">▼ Both teams lose 15% Property Value</div><div class="power-flavor">Integration always costs something.</div></div>
+    <div class="power-card"><span class="power-icon">🏨</span><div class="power-name" style="color:var(--neon-orange)">Revenue Extraction Engine</div><div class="power-effect">▲ Collect Hotel Rent of ALL properties from every opponent (one-time)</div><div class="power-tradeoff">▼ −35% to Credit Score</div><div class="power-flavor">Short-term profit. Long-term reputation hit.</div></div>
+    <div class="power-card"><span class="power-icon">⚖</span><div class="power-name" style="color:var(--neon-pink)">Balanced Framework Override</div><div class="power-effect">▲ +50% to ONE chosen stat (Cash / Property / Credit)</div><div class="power-tradeoff">▼ The other two drop by 20% each</div><div class="power-flavor">Optimization requires sacrifice.</div></div>
+  </div>
+</section>
+
+<!-- XI. SCORING -->
+<div class="section-divider"></div>
+<section class="section" id="scoring">
+  <div class="section-header"><div class="section-num">11</div><h2 class="section-title"><span>Final</span> Scoring</h2></div>
+  <div class="formula-box">
+    <div class="formula-title">⚡ VITOPOLY SCORE FORMULA ⚡</div>
+    <div class="formula-parts">
+      <div class="formula-part prop">40% × Property Value</div>
+      <div class="formula-plus">+</div>
+      <div class="formula-part cash">30% × Cash</div>
+      <div class="formula-plus">+</div>
+      <div class="formula-part credit">30% × Credit Score</div>
+    </div>
+    <div class="formula-note">⚠ This formula may be subject to change.</div>
+  </div>
+  <div class="winner-banner">
+    <span class="trophy">🏆</span>
+    <div class="winner-text">FACTION CHAMPION</div>
+    <div class="winner-sub">Highest Vitopoly Score within the Faction</div>
+  </div>
+</section>
+
+<footer>
+  <p>VITOPOLY RUSH 2.0 · OFFICIAL RULEBOOK</p>
+  <p>MAY THE MOST STRATEGIC TEAM WIN</p>
+</footer>
+
+<script>
+const starsEl = document.getElementById('stars');
+for (let i = 0; i < 120; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  const size = Math.random() * 2.5 + 0.5;
+  s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-duration:${2+Math.random()*4}s;animation-delay:${Math.random()*4}s;`;
+  starsEl.appendChild(s);
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  document.querySelector('.tab-btn.' + name).classList.add('active');
+}
+
+function toggleTile(card) {
+  const wasOpen = card.classList.contains('open');
+  document.querySelectorAll('.tile-card.open').forEach(c => {
+    c.classList.remove('open');
+    c.querySelector('.tile-toggle').textContent = '▼ TAP TO EXPAND';
+  });
+  if (!wasOpen) {
+    card.classList.add('open');
+    card.querySelector('.tile-toggle').textContent = '▲ TAP TO COLLAPSE';
+  }
+}
+
+const sections = document.querySelectorAll('section[id]');
+const navItems = document.querySelectorAll('.nav-item');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navItems.forEach(n => n.classList.remove('active'));
+      const active = document.querySelector(`.nav-item[href="#${entry.target.id}"]`);
+      if (active) { active.classList.add('active'); active.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'}); }
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(s => observer.observe(s));
+
+navItems.forEach(item => {
+  item.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(item.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+</script>
+</body>
+</html>
