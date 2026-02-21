@@ -462,18 +462,22 @@
     <div class="tile-card t-orange" onclick="toggleTile(this)">
       <span class="tile-icon">🎓</span><div class="tile-name">Extra Class</div><div class="tile-sub">Chaos Card Deck — 15 Cards</div><div class="tile-toggle">▼ TAP TO EXPAND</div>
       <div class="tile-detail">
-        <ul class="rule-list" style="font-size:14px">
-          <li>Swap one property with an opponent</li><li>Collect ₹500 from every player</li><li>Pay ₹500 to every player</li><li>Freeze one opponent for 1 turn</li><li>Gain +25 Credit from every player</li><li>Lose 25 Credit to every player</li><li>Double your next rent collection</li><li>Gain immunity from next penalty</li><li>Take ₹700 from richest player</li><li>Give ₹700 to poorest player</li><li>Choose two players → They swap a property</li><li>Gain ₹1,000</li><li>Lose ₹800</li><li>Gain +75 Credit</li><li>Lose 50 Credit</li>
-        </ul>
+        <div id="extra-class-display" style="background:rgba(255,107,0,0.08);border-left:2px solid var(--neon-orange);padding:12px;margin-bottom:14px;min-height:50px;display:flex;align-items:center;">
+          <p style="font-size:15px;font-weight:600;color:var(--text-primary);margin:0;" id="extra-class-text">Click to draw a random Chaos Card</p>
+        </div>
+        <button class="tab-btn food" onclick="event.stopPropagation(); generateExtraClass();" id="generate-extra-class-btn" style="margin-bottom:14px;">🎲 Draw Chaos Card</button>
+        <p style="font-family:'Orbitron',monospace;font-size:9px;color:var(--text-dim);letter-spacing:1px;margin-top:10px">15 POSSIBLE OUTCOMES</p>
       </div>
     </div>
 
     <div class="tile-card t-green" onclick="toggleTile(this)">
       <span class="tile-icon">🎒</span><div class="tile-name">Campus Treasure Chest</div><div class="tile-sub">Pure Reward Deck — 10 Cards</div><div class="tile-toggle">▼ TAP TO EXPAND</div>
       <div class="tile-detail">
-        <ul class="rule-list" style="font-size:14px">
-          <li>Gain ₹1,500</li><li>Gain ₹1,000 + 50 Credit</li><li>Free House Upgrade on one property</li><li>Double next rent collection</li><li>Immunity from next penalty</li><li>Take ₹500 from richest player</li><li>Everyone gives you ₹300</li><li>Gain +100 Credit</li><li>Convert 50 Credit → ₹1,200</li><li>Bank pays your next fine</li>
-        </ul>
+        <div id="treasure-display" style="background:rgba(57,255,20,0.08);border-left:2px solid var(--neon-green);padding:12px;margin-bottom:14px;min-height:50px;display:flex;align-items:center;">
+          <p style="font-size:15px;font-weight:600;color:var(--text-primary);margin:0;" id="treasure-text">Click to open the Treasure Chest</p>
+        </div>
+        <button class="tab-btn hostel" onclick="event.stopPropagation(); generateTreasure();" id="generate-treasure-btn" style="margin-bottom:14px;">🎲 Open Chest</button>
+        <p style="font-family:'Orbitron',monospace;font-size:9px;color:var(--text-dim);letter-spacing:1px;margin-top:10px">10 POSSIBLE REWARDS</p>
       </div>
     </div>
 
@@ -713,6 +717,51 @@ function generateViolation() {
   const randomViolation = violations[Math.floor(Math.random() * violations.length)];
   document.getElementById('violation-text').textContent = randomViolation;
   document.getElementById('generate-violation-btn').textContent = '🎲 Randomize Again';
+}
+
+// EXTRA CLASS - CHAOS CARD GENERATOR
+const chaosCards = [
+  'Swap one property with an opponent',
+  'Collect ₹500 from every player',
+  'Pay ₹500 to every player',
+  'Freeze one opponent for 1 turn',
+  'Gain +25 Credit from every player',
+  'Lose 25 Credit to every player',
+  'Double your next rent collection',
+  'Gain immunity from next penalty',
+  'Take ₹700 from richest player',
+  'Give ₹700 to poorest player',
+  'Choose two players → They swap a property',
+  'Gain ₹1,000',
+  'Lose ₹800',
+  'Gain +75 Credit',
+  'Lose 50 Credit'
+];
+
+function generateExtraClass() {
+  const random = chaosCards[Math.floor(Math.random() * chaosCards.length)];
+  document.getElementById('extra-class-text').textContent = random;
+  document.getElementById('generate-extra-class-btn').textContent = '🎲 Draw Again';
+}
+
+// CAMPUS TREASURE CHEST GENERATOR
+const treasureCards = [
+  'Gain ₹1,500',
+  'Gain ₹1,000 + 50 Credit',
+  'Free House Upgrade on one property',
+  'Double next rent collection',
+  'Immunity from next penalty',
+  'Take ₹500 from richest player',
+  'Everyone gives you ₹300',
+  'Gain +100 Credit',
+  'Convert 50 Credit → ₹1,200',
+  'Bank pays your next fine'
+];
+
+function generateTreasure() {
+  const random = treasureCards[Math.floor(Math.random() * treasureCards.length)];
+  document.getElementById('treasure-text').textContent = random;
+  document.getElementById('generate-treasure-btn').textContent = '🎲 Open Again';
 }
 </script>
 </body>
