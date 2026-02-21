@@ -275,9 +275,9 @@
     <table>
       <thead><tr><th>Action</th><th>Cash Effect</th><th>Credit Effect</th></tr></thead>
       <tbody>
-        <tr><td>Entry Fee (per attempt)</td><td class="vn">−₹100</td><td class="vd">No change</td></tr>
-        <tr><td>Win</td><td class="vp">+₹500 &nbsp;<span style="color:var(--text-dim);font-size:13px">(net +₹400)</span></td><td class="vp">+15 Credit</td></tr>
-        <tr><td>Loss</td><td class="vn">−₹100 (entry fee lost)</td><td class="vn">−5 Credit</td></tr>
+        <tr><td>Entry Fee (per attempt)</td><td class="vn">−₹1000</td><td class="vd">No change</td></tr>
+        <tr><td>Win</td><td class="vp">+₹2000 &nbsp;<span style="color:var(--text-dim);font-size:13px">(net +₹1000)</span></td><td class="vp">+15 Credit</td></tr>
+        <tr><td>Loss</td><td class="vn">−₹1000 (entry fee lost)</td><td class="vn">−5 Credit</td></tr>
         <tr><td>No Participation</td><td class="vd">No change</td><td class="vd">No change</td></tr>
       </tbody>
     </table>
@@ -372,7 +372,10 @@
       <span class="tile-icon">🎓</span><div class="tile-name">Passing By Extra Class</div><div class="tile-sub">Detention / Jail Equivalent</div><div class="tile-toggle">▼ TAP TO EXPAND</div>
       <div class="tile-detail">
         <p style="color:var(--neon-pink);font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:2px;margin-bottom:10px">DETAINED FOR ACADEMIC VIOLATION</p>
-        <ul class="rule-list" style="margin-bottom:14px"><li>Skip next 1 turn</li><li>Cannot collect rent during detention</li><li>Cannot build/upgrade during detention</li><li>Auto-released after 1 skipped turn</li></ul>
+        <div id="violation-display" style="background:rgba(255,45,120,0.08);border-left:2px solid var(--neon-pink);padding:12px;margin-bottom:14px;min-height:60px;display:flex;align-items:center;">
+          <p style="font-size:15px;font-weight:600;color:var(--text-primary);margin:0;" id="violation-text">Click the button below to generate a random violation</p>
+        </div>
+        <button class="tab-btn auditorium" id="generate-violation-btn" onclick="event.stopPropagation(); generateViolation();" style="margin-bottom:14px;">🎲 Randomize Violation</button>
         <p style="font-family:'Orbitron',monospace;font-size:10px;color:var(--neon-yellow);letter-spacing:2px;margin-bottom:8px">ESCAPE OPTIONS</p>
         <ul class="rule-list"><li>Pay ₹1,000 fine</li><li>Pay 50 Credit</li><li>Roll dice — 5 or 6 = free release</li></ul>
       </div>
@@ -479,6 +482,17 @@
   <!-- DARE CARDS -->
   <h3 style="font-family:'Orbitron',monospace;font-size:18px;color:var(--neon-yellow);letter-spacing:3px;text-transform:uppercase;margin:52px 0 24px">🎭 Official Campus Dare Cards</h3>
   <div class="dare-grid">
+    <div class="dare-card" style="background: linear-gradient(135deg, rgba(255, 107, 0, 0.15), rgba(255, 45, 120, 0.15)); border-color: var(--neon-orange); text-align: center;">
+      <div id="random-dare-card" style="display: none;">
+        <div class="dare-num" id="random-dare-num"></div>
+        <span class="dare-emoji" id="random-dare-emoji"></span>
+        <div class="dare-title" id="random-dare-title" style="color: var(--neon-orange);"></div>
+        <div class="dare-desc" id="random-dare-desc"></div>
+        <span class="dare-reward" id="random-dare-reward"></span>
+      </div>
+      <button class="tab-btn food" id="generate-dare-btn" style="margin: auto; display: block;">Generate Dare</button>
+    </div>
+   
     <div class="dare-card"><div class="dare-num">01</div><span class="dare-emoji">🎤</span><div class="dare-title">Classroom Announcement</div><div class="dare-desc">Go to the nearest classroom and shout "VITOPOLY RUSH!" three times loudly.</div><span class="dare-reward">Gain ₹1,000</span></div>
     <div class="dare-card"><div class="dare-num">02</div><span class="dare-emoji">⚡</span><div class="dare-title">Custom Dare</div><div class="dare-desc">The moderator will provide a custom DARE.</div><span class="dare-reward" style="color:var(--neon-yellow);border-color:rgba(255,230,0,0.3);background:rgba(255,230,0,0.1)">Determined by Moderator</span></div>
     <div class="dare-card"><div class="dare-num">03</div><span class="dare-emoji">🤳</span><div class="dare-title">Social Butterfly</div><div class="dare-desc">Take a selfie with 3 random strangers. All three must clearly appear in the picture.</div><span class="dare-reward">Gain ₹800</span></div>
@@ -648,6 +662,58 @@ navItems.forEach(item => {
     if (target) target.scrollIntoView({ behavior: 'smooth' });
   });
 });
+
+// DARE CARD GENERATOR
+const dares = [
+  { num: '01', emoji: '🎤', title: 'Classroom Announcement', desc: 'Go to the nearest classroom and shout "VITOPOLY RUSH!" three times loudly.', reward: 'Gain ₹1,000' },
+  { num: '02', emoji: '⚡', title: 'Custom Dare', desc: 'The moderator will provide a custom DARE.', reward: 'Determined by Moderator', isCustom: true },
+  { num: '03', emoji: '🤳', title: 'Social Butterfly', desc: 'Take a selfie with 3 random strangers. All three must clearly appear in the picture.', reward: 'Gain ₹800' },
+  { num: '04', emoji: '😂', title: 'Joke Diplomacy', desc: 'Go to another Faction, tell them a joke, make them clap. Clap must be audible.', reward: 'Gain ₹900' },
+  { num: '05', emoji: '📈', title: 'Investment Guru', desc: 'Ask a random person their best investment advice. Come back and repeat it loudly at your table.', reward: 'Gain +75 Credit' },
+  { num: '06', emoji: '👑', title: 'Confidence Move', desc: '"Bro, don\'t worry… I\'m winning this. You guys are just participating." Full confidence required.', reward: 'Gain ₹1,200' },
+  { num: '07', emoji: '😴', title: 'Class Inspector', desc: 'Tell a stranger: "Bro, I\'ve seen you in class. Why are you always sleeping?" Casually.', reward: 'Gain ₹700 + 25 Credit' }
+];
+
+const generateBtn = document.getElementById('generate-dare-btn');
+const dareCardDisplay = document.getElementById('random-dare-card');
+
+generateBtn.addEventListener('click', () => {
+  const randomDare = dares[Math.floor(Math.random() * dares.length)];
+  
+  document.getElementById('random-dare-num').textContent = randomDare.num;
+  document.getElementById('random-dare-emoji').textContent = randomDare.emoji;
+  document.getElementById('random-dare-title').textContent = randomDare.title;
+  document.getElementById('random-dare-desc').textContent = randomDare.desc;
+  document.getElementById('random-dare-reward').textContent = randomDare.reward;
+
+  const rewardEl = document.getElementById('random-dare-reward');
+  if (randomDare.isCustom) {
+    rewardEl.style.color = 'var(--neon-yellow)';
+    rewardEl.style.borderColor = 'rgba(255,230,0,0.3)';
+    rewardEl.style.background = 'rgba(255,230,0,0.1)';
+  } else {
+    rewardEl.style.color = 'var(--neon-green)';
+    rewardEl.style.borderColor = 'rgba(57,255,20,0.3)';
+    rewardEl.style.background = 'rgba(57,255,20,0.1)';
+  }
+
+  dareCardDisplay.style.display = 'block';
+  generateBtn.textContent = 'Generate Another';
+});
+
+// VIOLATION GENERATOR
+const violations = [
+  'Skip next 1 turn',
+  'Cannot collect rent during detention',
+  'Cannot build/upgrade during detention',
+  'Auto-released after 1 skipped turn'
+];
+
+function generateViolation() {
+  const randomViolation = violations[Math.floor(Math.random() * violations.length)];
+  document.getElementById('violation-text').textContent = randomViolation;
+  document.getElementById('generate-violation-btn').textContent = '🎲 Randomize Again';
+}
 </script>
 </body>
 </html>
